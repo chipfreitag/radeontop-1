@@ -81,6 +81,7 @@ int main(int argc, char **argv) {
 	unsigned char bus = 0, forcemem = 0;
 	unsigned int limit = 0;
 	char *dump = NULL;
+        char busid[32];
 
 	// Translations
 #ifdef ENABLE_NLS
@@ -137,7 +138,7 @@ int main(int argc, char **argv) {
 
 	// init (regain privileges for bus initialization and ultimately drop them afterwards)
 	seteuid(0);
-	const unsigned int pciaddr = init_pci(bus, forcemem);
+	const unsigned int pciaddr = init_pci(bus, busid, forcemem);
 	setuid(getuid());
 
 	const int family = getfamily(pciaddr);
@@ -154,7 +155,7 @@ int main(int argc, char **argv) {
 	if (dump)
 		dumpdata(ticks, dump, limit);
 	else
-		present(ticks, cardname, color);
+		present(ticks, cardname, color, busid);
 
 	munmap((void *) area, MMAP_SIZE);
 	return 0;

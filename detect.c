@@ -24,7 +24,8 @@ unsigned long long gttsize;
 int drm_fd = -1;
 char drm_name[10] = ""; // should be radeon or amdgpu
 
-unsigned int init_pci(unsigned char bus, const unsigned char forcemem) {
+unsigned int init_pci(unsigned char bus, char * busid, 
+                      const unsigned char forcemem) {
 
 	int ret = pci_system_init();
 	if (ret)
@@ -42,15 +43,16 @@ unsigned int init_pci(unsigned char bus, const unsigned char forcemem) {
 
 	struct pci_device_iterator *iter = pci_id_match_iterator_create(&match);
 	struct pci_device *dev = NULL;
-	char busid[32];
 
 	while ((dev = pci_device_next(iter))) {
 		pci_device_probe(dev);
 		if ((dev->device_class & 0x00ffff00) != 0x00030000 &&
 			(dev->device_class & 0x00ffff00) != 0x00038000)
 			continue;
-		snprintf(busid, sizeof(busid), "pci:%04x:%02x:%02x.%u",
+		snprintf(busid, 32, "pci:%04x:%02x:%02x.%u",
 				dev->domain, dev->bus, dev->dev, dev->func);
+                busid[16] = 0;
+                printf("%s %d\n",busid,dev->bus);
 		if (!bus || bus == dev->bus)
 			break;
 	}

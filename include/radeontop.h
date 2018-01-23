@@ -63,7 +63,7 @@ extern const void *area;
 extern int use_ioctl;
 
 // detect.c
-unsigned int init_pci(unsigned char bus, const unsigned char forcemem);
+unsigned int init_pci(unsigned char bus, char * busid, const unsigned char forcemem);
 int getfamily(unsigned int id);
 void initbits(int fam);
 unsigned long long getvram();
@@ -75,7 +75,8 @@ void collect(unsigned int *ticks);
 extern struct bits_t *results;
 
 // ui.c
-void present(const unsigned int ticks, const char card[], unsigned int color);
+void present(const unsigned int ticks, const char card[], unsigned int color,
+             const char busid[]);
 
 // dump.c
 void dumpdata(const unsigned int ticks, const char file[], const unsigned int limit);
